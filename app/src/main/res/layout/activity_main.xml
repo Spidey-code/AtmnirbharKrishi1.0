@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
-    tools:context="com.example.deathcode.abot.MainActivity">
+    tools:context="com.example.deathcode.abot.activity.MainActivity">
 
 
     <android.support.v7.widget.RecyclerView
@@ -13,22 +13,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/userInput"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <EditText
         android:id="@+id/userInput"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="330dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/bg_edit_text"
         android:fontFamily="@font/montserrat"
-        android:hint="Ask Christopher"
-        android:inputType="text"
-        android:textColor="#fff"
-        android:padding="12dp"
+        android:hint="@string/UserInput"
         android:imeActionId="4"
         android:imeOptions="actionSend"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="#fff"
         android:textColorHint="#fff"
-        android:textSize="20sp"/>
-</RelativeLayout>
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/Imagebutton"
+        android:layout_width="93dp"
+        android:layout_height="59dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="micClick"
+        android:src="@drawable/android_mic_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/userInput">
+
+    </ImageView>
+</android.support.constraint.ConstraintLayout>

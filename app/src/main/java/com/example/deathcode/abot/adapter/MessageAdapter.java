@@ -13,11 +13,6 @@ import com.example.deathcode.abot.model.ResponseMessage;
 import java.util.List;
 
 
-
-/**
- * Created by deathcode on 26/01/18.
- */
-
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.CustomViewHolder> {
 
     List<ResponseMessage> responseMessages;

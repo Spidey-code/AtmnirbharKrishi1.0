@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Demo</string>
+    <string name="selectedlanguage">हिंदी</string>
+    <string name="language">स्वागत हे</string>
+    <string name="Button">सहायक को लॉन्च करें</string>
+    <string name="UserInput">यहाँ पूछें</string>
+
+</resources>
