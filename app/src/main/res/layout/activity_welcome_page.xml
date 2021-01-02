@@ -10,52 +10,25 @@
 
     <TextView
         android:id="@+id/text1"
-        android:layout_width="239dp"
-        android:layout_height="98dp"
-        android:layout_above="@+id/dialog_language"
+        android:layout_width="416dp"
+        android:layout_height="728dp"
+        android:layout_above="@+id/AssistantButton"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="207dp"
-        android:layout_marginEnd="83dp"
-        android:layout_marginBottom="44dp"
-        android:text="Welcome!"
-        android:textColor="@color/teal_700"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginBottom="-48dp"
         android:gravity="center"
-        android:textSize="40sp"
+        android:text="Welcome to Aatmnirbhar Krishi android application"
+        android:textColor="@color/teal_700"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/dialog_language"
-        android:layout_width="234dp"
-        android:layout_height="42dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginEnd="87dp"
-        android:layout_marginBottom="339dp"
-        android:background="@android:color/transparent"
-        android:dropDownVerticalOffset="35dp"
-        android:gravity="center"
-        android:popupBackground="@color/colorPrimaryDark"
-        android:text="@string/selectedlanguage"
-        android:textColor="@color/teal_200"
-        android:textSize="20dp"/>
-
-    <ImageView
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/dialog_language"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="60dp"
-        android:layout_marginRight="54dp"
-        android:layout_marginBottom="349dp"
-        android:src="@drawable/drop" />
 
     <Button
         android:id="@+id/AssistantButton"
@@ -64,9 +37,20 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="42dp"
-        android:layout_marginEnd="113dp"
-        android:layout_marginBottom="249dp"
+        android:layout_marginEnd="118dp"
+        android:layout_marginBottom="172dp"
         android:text="@string/Button" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/translation"
+        android:layout_width="62dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/hindi_english_translation_icon"
+        android:background="@drawable/shape_background"/>
 
 
 </RelativeLayout>

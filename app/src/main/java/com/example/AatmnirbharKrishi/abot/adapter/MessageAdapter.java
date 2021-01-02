@@ -1,4 +1,4 @@
-package com.example.deathcode.abot.adapter;
+package com.example.AatmnirbharKrishi.abot.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.deathcode.abot.R;
-import com.example.deathcode.abot.model.ResponseMessage;
+import com.example.AatmnirbharKrishi.abot.R;
+import com.example.AatmnirbharKrishi.abot.model.ResponseMessage;
 
 import java.util.List;
 

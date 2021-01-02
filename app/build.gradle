@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.deathcode.abot"
+        applicationId "com.example.AatmnirbharKrishi.abot"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1

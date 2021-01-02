@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Demo</string>
+    <string name="app_name">आत्मनिर्भर कृषि</string>
     <string name="selectedlanguage">हिंदी</string>
-    <string name="language">स्वागत हे</string>
+    <string name="language">आत्मनिर्भर कृषि एंड्रॉयड आवेदन में आपका स्वागत है</string>
     <string name="Button">सहायक को लॉन्च करें</string>
     <string name="UserInput">यहाँ पूछें</string>
 

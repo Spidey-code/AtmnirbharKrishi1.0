@@ -1,26 +1,29 @@
-package com.example.deathcode.abot.activity;
+package com.example.AatmnirbharKrishi.abot.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.deathcode.abot.R;
-import com.example.deathcode.abot.adapter.MessageAdapter;
-import com.example.deathcode.abot.model.ResponseMessage;
+import com.example.AatmnirbharKrishi.abot.R;
+import com.example.AatmnirbharKrishi.abot.adapter.MessageAdapter;
+import com.example.AatmnirbharKrishi.abot.model.ResponseMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
     List<ResponseMessage> responseMessageList;
     EditText InputFromMic;
+    String question,answer;
+    private TextToSpeech mTTS;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +48,59 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(messageAdapter);
         InputFromMic = (EditText) findViewById(R.id.userInput);
 
+        //Intialization of TTS
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result =  mTTS.setLanguage(Locale.ENGLISH);
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not Supported");
+                    }
+                }else {
+                    Log.e("TTS", "Intialization Failed");
+                }
+            }
+        });
+
     //For input from keyboard
         InputFromKeyboard.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEND) {
+                if (i == IME_ACTION_SEND) {
                     ResponseMessage responseMessage = new ResponseMessage(InputFromKeyboard.getText().toString(), true);
                     responseMessageList.add(responseMessage);
-                    ResponseMessage responseMessage2 = new ResponseMessage(InputFromKeyboard.getText().toString(), false);
+                    question=InputFromKeyboard.getText().toString();
+                    if(question.equalsIgnoreCase("Hello") || question.equalsIgnoreCase("Hey")){
+                        answer="Hello! I'm your personal assistant. How may i help you?";
+                    }
+                    else if(question.equalsIgnoreCase("What can you do?")){
+                        answer="I can help you in solving questions related to farming. I can also give you information about crops and your soil.";
+                    }
+                    else if(question.equalsIgnoreCase("Good Morning")){
+                        answer="A very good morning to you!";
+                    }
+                    else{
+                        answer="Sorry! I can't help you with that?";
+                    }
+                    ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
                     responseMessageList.add(responseMessage2);
                     messageAdapter.notifyDataSetChanged();
+                    speak();
+                    InputFromKeyboard.getText().clear();
+                    //calling auto scrolling function
                     if (!isLastVisible())
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
                 }
                 return false;
             }
         });
+
+
     }
-    //For auto scrolling
+    //For auto scrolling function
     boolean isLastVisible() {
         LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
         int pos = layoutManager.findLastCompletelyVisibleItemPosition();
@@ -79,6 +120,22 @@ public class MainActivity extends AppCompatActivity {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+    //for text to speech
+    private void speak() {
+        String text = answer;
+        mTTS.setPitch(1);
+        mTTS.setSpeechRate(1);
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+    @Override
+    protected void onDestroy() {
+        if (mTTS != null ) {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+
+        super.onDestroy();
     }
 
     @Override

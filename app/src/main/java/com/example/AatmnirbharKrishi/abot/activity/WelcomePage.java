@@ -1,4 +1,4 @@
-package com.example.deathcode.abot.activity;
+package com.example.AatmnirbharKrishi.abot.activity;
 
 
 import android.app.AlertDialog;
@@ -10,27 +10,29 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.deathcode.abot.LocaleHelper;
-import com.example.deathcode.abot.R;
+import com.example.AatmnirbharKrishi.abot.LocaleHelper;
+import com.example.AatmnirbharKrishi.abot.R;
 
 public class WelcomePage extends AppCompatActivity {
 
     private Button Abutton;
-    TextView language_dialog,text1;
+    TextView text1;
     boolean lang_selected=true;
     Context context;
     Resources resources;
+    ImageView Translator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_page);
-        language_dialog = (TextView)findViewById(R.id.dialog_language);
         text1=(TextView)findViewById(R.id.text1);
         Abutton=(Button) findViewById(R.id.AssistantButton);
+        Translator=(ImageView)findViewById(R.id.translation);
 
         Abutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +41,7 @@ public class WelcomePage extends AppCompatActivity {
             }
         });
 
-        language_dialog.setOnClickListener(new View.OnClickListener() {
+        Translator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String[] Language = {"ENGLISH", "हिन्दी"};
@@ -59,7 +61,6 @@ public class WelcomePage extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(WelcomePage.this,"Language changed",Toast.LENGTH_SHORT).show();
-                                language_dialog.setText(Language[which]);
                                 lang_selected= Language[which].equals("ENGLISH");
 
                                 //if user select prefered language as English then

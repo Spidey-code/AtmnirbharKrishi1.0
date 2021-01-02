@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Demo</string>
+    <string name="app_name">Aatmnirbhar Krishi</string>
     <string name="selectedlanguage">English</string>
-    <string name="language">Welcome</string>
+    <string name="language">Welcome to Aatmnirbhar Krishi android application</string>
     <string name="Button">Launch Assistant</string>
     <string name="UserInput">Ask Here</string>
 </resources>

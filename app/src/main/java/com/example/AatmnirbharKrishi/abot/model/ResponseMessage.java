@@ -1,4 +1,4 @@
-package com.example.deathcode.abot.model;
+package com.example.AatmnirbharKrishi.abot.model;
 
 
 public class ResponseMessage {
