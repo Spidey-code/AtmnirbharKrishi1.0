@@ -1,14 +1,38 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.chaquo.python'
 
 android {
     compileSdkVersion 26
     defaultConfig {
+        python{
+            pip{
+                install "pandas"
+                install 'openpyxl'
+            }
+        }
+        //give source folder to python
+        sourceSets{
+            main{
+                python{
+                    srcDirs = ["src/main/python"]
+                }
+            }
+        }
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+
+        //here give path to file python.exe
+        python{
+            buildPython "C:/Python/python.exe"
+        }
         applicationId "com.example.AatmnirbharKrishi.abot"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -16,8 +40,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
