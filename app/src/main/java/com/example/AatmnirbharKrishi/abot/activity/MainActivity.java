@@ -11,10 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.example.AatmnirbharKrishi.abot.R;
 import com.example.AatmnirbharKrishi.abot.adapter.MessageAdapter;
 import com.example.AatmnirbharKrishi.abot.model.ResponseMessage;
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     EditText InputFromMic;
     String question,answer;
     private TextToSpeech mTTS;
+    Button Show_Crops;
+
 
 
     @Override
@@ -47,6 +53,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(messageAdapter);
         InputFromMic = (EditText) findViewById(R.id.userInput);
+        Show_Crops=(Button)findViewById(R.id.ShowCrops);
+
+        //For python intialization
+        if(!Python.isStarted())
+            Python.start(new AndroidPlatform(this));
+
+        Python py = Python.getInstance();
+        final PyObject pyobj = py.getModule("LocalDataset");                            //give name of python file
+        Show_Crops.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //function name with the arguments which are in python file
+                PyObject obj=pyobj.callAttr("main");
+
+                //save op of python file in text view
+                answer=obj.toString();
+            }
+        });
 
         //Intialization of TTS
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -65,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    //For input from keyboard
+    //For input from keyboard and bot reply
         InputFromKeyboard.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -73,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     ResponseMessage responseMessage = new ResponseMessage(InputFromKeyboard.getText().toString(), true);
                     responseMessageList.add(responseMessage);
                     question=InputFromKeyboard.getText().toString();
-                    if(question.equalsIgnoreCase("Hello") || question.equalsIgnoreCase("Hey")){
-                        answer="Hello! I'm your personal assistant. How may i help you?";
+                    if(question.equalsIgnoreCase("Show crops of Navsari") || question.equalsIgnoreCase("Hey")){
+                        //answer="Hello! I'm your personal assistant. How may i help you?";
                     }
                     else if(question.equalsIgnoreCase("What can you do?")){
                         answer="I can help you in solving questions related to farming. I can also give you information about crops and your soil.";
@@ -83,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         answer="A very good morning to you!";
                     }
                     else{
-                        answer="Sorry! I can't help you with that?";
+                        answer="Sorry! I can't help you with that!";
                     }
                     ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
                     responseMessageList.add(responseMessage2);
