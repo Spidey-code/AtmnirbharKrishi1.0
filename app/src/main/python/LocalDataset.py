@@ -1,6 +1,4 @@
 import pandas as pd
-#import xlrd 
-#import et_xmlfile
 import openpyxl
 from os.path import dirname, join
 
