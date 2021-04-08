@@ -60,15 +60,20 @@ public class MainActivity extends AppCompatActivity {
             Python.start(new AndroidPlatform(this));
 
         Python py = Python.getInstance();
-        final PyObject pyobj = py.getModule("LocalDataset");                            //give name of python file
+        final PyObject pyobj = py.getModule("LocalDataset");    //give name of python file
+
+        //Show Crops module
         Show_Crops.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //function name with the arguments which are in python file
                 PyObject obj=pyobj.callAttr("main");
-
+                request("Show crops of Navsari");
                 //save op of python file in text view
-                answer=obj.toString();
+                answer="Showing crops of navsari:\n";
+                answer+=obj.toString();
+                reply(answer);
+
             }
         });
 
@@ -94,11 +99,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == IME_ACTION_SEND) {
-                    ResponseMessage responseMessage = new ResponseMessage(InputFromKeyboard.getText().toString(), true);
-                    responseMessageList.add(responseMessage);
                     question=InputFromKeyboard.getText().toString();
-                    if(question.equalsIgnoreCase("Show crops of Navsari") || question.equalsIgnoreCase("Hey")){
-                        //answer="Hello! I'm your personal assistant. How may i help you?";
+                    request(question);
+                    if(question.equalsIgnoreCase("Hello") || question.equalsIgnoreCase("Hey")){
+                        answer="Hello! I'm your personal assistant. How may i help you?";
                     }
                     else if(question.equalsIgnoreCase("What can you do?")){
                         answer="I can help you in solving questions related to farming. I can also give you information about crops and your soil.";
@@ -109,14 +113,10 @@ public class MainActivity extends AppCompatActivity {
                     else{
                         answer="Sorry! I can't help you with that!";
                     }
-                    ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
-                    responseMessageList.add(responseMessage2);
-                    messageAdapter.notifyDataSetChanged();
-                    speak();
+                    reply(answer);
                     InputFromKeyboard.getText().clear();
                     //calling auto scrolling function
-                    if (!isLastVisible())
-                        recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+
                 }
                 return false;
             }
@@ -124,6 +124,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    //questions and answers
+    public void  request(String question){
+        ResponseMessage responseMessage = new ResponseMessage(question, true);
+        responseMessageList.add(responseMessage);
+    }
+    public void reply(String answer){
+
+        ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
+        responseMessageList.add(responseMessage2);
+        messageAdapter.notifyDataSetChanged();
+        speak();
+        if (!isLastVisible())
+            recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+    }
+    //--------------------------------
     //For auto scrolling function
     boolean isLastVisible() {
         LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());

@@ -11,7 +11,7 @@ df.to_numpy()
 #search the crops throught places
 def SearchByLocation():
     ans=(df.crops[(df.area == 'Navsari'.lower())])
-    result=",".join(ans)
+    result=" ".join(ans)
     return result
 
 def SearchByCrop(Crop):
