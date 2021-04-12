@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,9 +30,9 @@ public class WelcomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_page);
-        text1=(TextView)findViewById(R.id.text1);
-        Abutton=(Button) findViewById(R.id.AssistantButton);
-        Translator=(ImageView)findViewById(R.id.translation);
+        text1= findViewById(R.id.text1);
+        Abutton= findViewById(R.id.AssistantButton);
+        Translator=findViewById(R.id.translation);
 
         Abutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +49,7 @@ public class WelcomePage extends AppCompatActivity {
 
                 if(lang_selected)
                 {
-                    checkedItem=0;
+                    checkedItem =0;
                 }else
                 {
                     checkedItem=1;
@@ -63,7 +63,7 @@ public class WelcomePage extends AppCompatActivity {
                                 Toast.makeText(WelcomePage.this,"Language changed",Toast.LENGTH_SHORT).show();
                                 lang_selected= Language[which].equals("ENGLISH");
 
-                                //if user select prefered language as English then
+                                //if user select preferred language as English then
                                 if(Language[which].equals("ENGLISH"))
                                 {
                                     context = LocaleHelper.setLocale(WelcomePage.this, "en");
@@ -71,8 +71,8 @@ public class WelcomePage extends AppCompatActivity {
 
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
-                                }
-                                //if user select prefered language as Hindi then
+                            }
+                                //if user select preferred language as Hindi then
                                 if(Language[which].equals("हिन्दी"))
                                 {
                                     context = LocaleHelper.setLocale(WelcomePage.this, "hi");
@@ -81,6 +81,7 @@ public class WelcomePage extends AppCompatActivity {
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
                                 }
+
                             }
                         })
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {

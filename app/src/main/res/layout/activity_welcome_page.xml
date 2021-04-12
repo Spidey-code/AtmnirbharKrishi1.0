@@ -41,7 +41,7 @@
         android:layout_marginBottom="172dp"
         android:text="@string/Button" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <android.widget.ImageView
         android:id="@+id/translation"
         android:layout_width="62dp"
         android:layout_height="50dp"

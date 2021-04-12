@@ -1,55 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
-    tools:context="com.example.AatmnirbharKrishi.abot.activity.MainActivity">
+    tools:context="com.example.AatmnirbharKrishi.abot.activity.MainActivity"
+    tools:ignore="ExtraText">
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/conversation"
-        android:layout_width="392dp"
-        android:layout_height="549dp"
+        android:layout_width="391dp"
+        android:layout_height="567dp"
         android:layout_above="@+id/userInput"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/userInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.135">
+        app:layout_constraintVertical_bias="0.16">
 
-    </android.support.v7.widget.RecyclerView>
-
-    <LinearLayout
-        android:layout_width="385dp"
-        android:layout_height="74dp"
-        android:layout_margin="5dp"
-        android:layout_marginEnd="297dp"
-        app:layout_constraintEnd_toEndOf="@+id/conversation"
-        tools:layout_editor_absoluteY="270dp"
-        tools:ignore="MissingConstraints"
-        android:background="@color/white"
-        ></LinearLayout>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
-        android:layout_width="405dp"
-        android:layout_height="61dp"
+        android:layout_width="425dp"
+        android:layout_height="64dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toTopOf="@+id/userInput"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conversation"
-        app:layout_constraintVertical_bias="0.419">
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:background="#55000000"
+            android:fadeScrollbars="true"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
             <Button
@@ -60,10 +54,11 @@
                 android:text="Show Crops"></Button>
 
             <Button
+                android:id="@+id/WeatherBtn"
                 android:layout_width="159dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/cardview_default_elevation"
-                android:text="2"></Button>
+                android:layout_margin="2dp"
+                android:text="GetInformation"></Button>
 
             <Button
                 android:layout_width="wrap_content"
@@ -113,4 +108,67 @@
         app:layout_constraintStart_toEndOf="@+id/userInput">
 
     </ImageView>
-</android.support.constraint.ConstraintLayout>
+
+    <!-- weather layout-->
+    <RelativeLayout
+        android:id="@+id/rlMain"
+        android:layout_width="405dp"
+        android:layout_height="165dp"
+        android:background="#0A2EF6"
+        android:padding="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/txtCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="City"
+            android:textColor="#FFFFFF"
+            android:textSize="32dp" />
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtCity"
+            android:text="Time"
+            android:textColor="#FFFFFF"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/txtTime"
+            android:src="@drawable/phc"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/txtValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgIcon"
+            android:layout_alignParentRight="true"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="3°"
+            android:textColor="#ffffff"
+            android:textSize="70dp" />
+
+        <TextView
+            android:id="@+id/text_viewLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
