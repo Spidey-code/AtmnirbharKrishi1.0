@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,12 @@ public class WelcomePage extends AppCompatActivity {
     Context context;
     Resources resources;
     ImageView Translator;
+    //Shared preference initialization
+    SharedPreferences sharedPreferences;
+    private static final String SHARED_PREF_NAME = "mypref";
+    private static final String Msg1 = "Welcomemsg";
+    private static final String Msg2 = "Button";
+    private static final boolean Msg3=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,18 @@ public class WelcomePage extends AppCompatActivity {
         text1= findViewById(R.id.text1);
         Abutton= findViewById(R.id.AssistantButton);
         Translator=findViewById(R.id.translation);
+
+        //shared preference declaration
+        sharedPreferences=getSharedPreferences( SHARED_PREF_NAME,MODE_PRIVATE);
+        String WelcomeMsg = sharedPreferences.getString(Msg1,null);
+        String buttonMsg = sharedPreferences.getString(Msg2,null);
+        boolean SelectLang=sharedPreferences.getBoolean(String.valueOf(Msg3),true);
+
+        if(WelcomeMsg!=null || buttonMsg!=null){
+            text1.setText(WelcomeMsg);
+            Abutton.setText(buttonMsg);
+            lang_selected=SelectLang;
+        }
 
         Abutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +68,7 @@ public class WelcomePage extends AppCompatActivity {
 
                 if(lang_selected)
                 {
-                    checkedItem =0;
+                    checkedItem=0;
                 }else
                 {
                     checkedItem=1;
@@ -71,6 +90,9 @@ public class WelcomePage extends AppCompatActivity {
 
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
+
+                                    SaveData(resources.getString(R.string.language),resources.getString(R.string.Button),true);
+
                             }
                                 //if user select preferred language as Hindi then
                                 if(Language[which].equals("हिन्दी"))
@@ -80,6 +102,8 @@ public class WelcomePage extends AppCompatActivity {
 
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
+
+                                    SaveData(resources.getString(R.string.language),resources.getString(R.string.Button),false);
                                 }
 
                             }
@@ -91,6 +115,7 @@ public class WelcomePage extends AppCompatActivity {
                             }
                         });
                 builder.create().show();
+
             }
 
         });
@@ -98,5 +123,13 @@ public class WelcomePage extends AppCompatActivity {
     public  void openPage2(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void SaveData(String s1,String s2,boolean s3){
+        SharedPreferences.Editor editor =sharedPreferences.edit();
+        editor.putString(Msg1,s1);
+        editor.putString(Msg2,s2);
+        editor.putBoolean(String.valueOf(Msg3),s3);
+        editor.apply();
     }
 }

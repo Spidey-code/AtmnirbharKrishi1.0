@@ -7,22 +7,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -33,6 +26,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
@@ -69,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     MessageAdapter messageAdapter;
     List<ResponseMessage> responseMessageList;
-    EditText InputFromMic;
-    String question,answer;
+    static String question,answer;
     public static TextToSpeech mTTS;
     Button Show_Crops;
 
@@ -103,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(responseMessageList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(messageAdapter);
-        InputFromMic =  findViewById(R.id.userInput);
         Show_Crops= findViewById(R.id.ShowCrops);
 
         //weather initialization
@@ -126,13 +123,14 @@ public class MainActivity extends AppCompatActivity {
                     rlMain.setVisibility(View.VISIBLE);
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    try {
-                        Thread.sleep(1);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            rlMain.setVisibility(View.GONE);
+                        }
+                    }, 1000);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    rlMain.setVisibility(View.GONE);
+                    GetInformation();
                     return true;
                 }
                 return false;
@@ -186,18 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 if (i == IME_ACTION_SEND) {
                     question=InputFromKeyboard.getText().toString();
                     request(question);
-                    if(question.equalsIgnoreCase("Hello") || question.equalsIgnoreCase("Hey")){
-                        answer="Hello! I'm your personal assistant. How may i help you?";
-                    }
-                    else if(question.equalsIgnoreCase("What can you do?")){
-                        answer="I can help you in solving questions related to farming. I can also give you information about crops and your soil.";
-                    }
-                    else if(question.equalsIgnoreCase("Good Morning")){
-                        answer="A very good morning to you!";
-                    }
-                    else{
-                        answer="Sorry! I can't help you with that!";
-                    }
                     reply(answer);
                     InputFromKeyboard.getText().clear();
                     //calling auto scrolling function
@@ -209,20 +195,36 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    //questions and answers
+    //questions, analyse and answers
     public void  request(String question){
         ResponseMessage responseMessage = new ResponseMessage(question, true);
         responseMessageList.add(responseMessage);
+        messageAdapter.notifyDataSetChanged();
+        if(question.equalsIgnoreCase("Hello") || question.equalsIgnoreCase("Hey")){
+            answer="Hello! I'm your personal assistant. How may i help you?";
+        }
+        else if(question.equalsIgnoreCase("What can you do?")){
+            answer="I can help you in solving questions related to farming. I can also give you information about crops and your soil.";
+        }
+        else if(question.equalsIgnoreCase("Good Morning")){
+            answer="A very good morning to you!";
+        }
+        else{
+            answer="Sorry! I can't help you with that!";
+        }
     }
-    public void reply(String answer){
+
+
+    public void reply(final String answer){
 
         ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
         responseMessageList.add(responseMessage2);
         messageAdapter.notifyDataSetChanged();
-        speak(answer);
         if (!isLastVisible())
             recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+        speak(answer);
     }
+
     //--------------------------------
     //For auto scrolling function
     boolean isLastVisible() {
@@ -256,7 +258,7 @@ public void micClick(View view) {
     Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now!");
+    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Listening");
     try {
         startActivityForResult(intent, 1);
     } catch (ActivityNotFoundException e) {
@@ -266,14 +268,17 @@ public void micClick(View view) {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    InputFromMic.setText(result.get(0));
-                    //request(result.get(0).toString());
+        if (requestCode==1 &&resultCode == RESULT_OK && null != data) {
+            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            question=result.get(0).toString();
+            request(question);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    reply(answer);
                 }
-                break;
+            }, 1000);
+
         }
     }
 
@@ -363,7 +368,6 @@ public void micClick(View view) {
         City = locate;
 
         String url = "https://api.openweathermap.org/data/2.5/weather?q=" + City +"&units=metric&appid="+ Key;
-        //rlMain.setVisibility(View.VISIBLE);
 
         DownloadJSON downloadJSON = new DownloadJSON();
 
