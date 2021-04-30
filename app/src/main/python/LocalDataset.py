@@ -9,15 +9,18 @@ df = pd.read_excel(filename, engine='openpyxl')
 df.to_numpy()
 
 #search the crops throught places
-def SearchByLocation():
-    ans=(df.crops[(df.area == 'Navsari'.lower())])
-    result=" ".join(ans)
+def SearchByLocation(place):
+    #place="abcd"
+    ans=(df.crops[(df.area == place.lower())])
+    if ans.empty:
+        result="No data Available"
+    else:
+        result=" ".join(ans)
     return result
 
 def SearchByCrop(Crop):
     return None
 #choice the function call    
-def main():
-    return SearchByLocation()
+
     
-print(main())
+print(SearchByLocation("navsari"))

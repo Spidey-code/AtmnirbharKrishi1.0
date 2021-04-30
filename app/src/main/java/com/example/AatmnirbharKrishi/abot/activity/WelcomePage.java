@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 import com.example.AatmnirbharKrishi.abot.LocaleHelper;
 import com.example.AatmnirbharKrishi.abot.R;
 
+import java.util.Locale;
+
 public class WelcomePage extends AppCompatActivity {
 
     private Button Abutton;
@@ -25,7 +30,9 @@ public class WelcomePage extends AppCompatActivity {
     boolean lang_selected=true;
     Context context;
     Resources resources;
+    public static TextToSpeech mTTS;
     ImageView Translator;
+    public String Greet="Welcome to Aatmnirbhar Krishi android application";
     //Shared preference initialization
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "mypref";
@@ -46,12 +53,30 @@ public class WelcomePage extends AppCompatActivity {
         String WelcomeMsg = sharedPreferences.getString(Msg1,null);
         String buttonMsg = sharedPreferences.getString(Msg2,null);
         boolean SelectLang=sharedPreferences.getBoolean(String.valueOf(Msg3),true);
-
+        Greet=WelcomeMsg;
         if(WelcomeMsg!=null || buttonMsg!=null){
             text1.setText(WelcomeMsg);
             Abutton.setText(buttonMsg);
             lang_selected=SelectLang;
         }
+
+        //Initialization of TTS
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int resultE =  mTTS.setLanguage(Locale.ENGLISH);
+                    int resultH = mTTS.setLanguage(new Locale("hin"));
+                    if (resultE == TextToSpeech.LANG_MISSING_DATA
+                            || resultE == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not Supported");
+                    }
+                }else {
+                    Log.e("TTS", "Intialization Failed");
+                }
+            }
+        });
+
 
         Abutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +115,7 @@ public class WelcomePage extends AppCompatActivity {
 
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
-
+                                    speak(resources.getString(R.string.language));
                                     SaveData(resources.getString(R.string.language),resources.getString(R.string.Button),true);
 
                             }
@@ -102,7 +127,7 @@ public class WelcomePage extends AppCompatActivity {
 
                                     text1.setText(resources.getString(R.string.language));
                                     Abutton.setText(resources.getString(R.string.Button));
-
+                                    speak(resources.getString(R.string.language));
                                     SaveData(resources.getString(R.string.language),resources.getString(R.string.Button),false);
                                 }
 
@@ -123,8 +148,14 @@ public class WelcomePage extends AppCompatActivity {
     public  void openPage2(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        speak("Running");
     }
-
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        speak(Greet);
+    }
     public void SaveData(String s1,String s2,boolean s3){
         SharedPreferences.Editor editor =sharedPreferences.edit();
         editor.putString(Msg1,s1);
@@ -132,4 +163,22 @@ public class WelcomePage extends AppCompatActivity {
         editor.putBoolean(String.valueOf(Msg3),s3);
         editor.apply();
     }
+
+    //for text to speech
+    public static void speak(String answer) {
+        String text = answer;
+        mTTS.setPitch(1);
+        mTTS.setSpeechRate(1);
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+    @Override
+    protected void onDestroy() {
+        if (mTTS != null ) {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+
+        super.onDestroy();
+    }
+
 }

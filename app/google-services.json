@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "624413211224",
+    "project_id": "animated-cinema-311212",
+    "storage_bucket": "animated-cinema-311212.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624413211224:android:cfaf5c301898a6519ea82d",
+        "android_client_info": {
+          "package_name": "com.example.AatmnirbharKrishi.abot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624413211224-qgqp3rg5h7155sci8bl2n9c0tpe5k5o6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.AatmnirbharKrishi.abot",
+            "certificate_hash": "bcb9c7ce3bc6cb1ef013efa09623322b2c0d1b39"
+          }
+        },
+        {
+          "client_id": "624413211224-fi67nkbv2n46mc121909fui23q87qghu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDel_djjzQiPDYNXBTISZE6bwqrldX28rE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624413211224-fi67nkbv2n46mc121909fui23q87qghu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

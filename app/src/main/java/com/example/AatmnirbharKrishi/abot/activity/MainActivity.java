@@ -13,7 +13,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -21,9 +20,11 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,14 @@ import com.example.AatmnirbharKrishi.abot.model.ResponseMessage;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
     static String question,answer;
     public static TextToSpeech mTTS;
     Button Show_Crops;
+    //for translation
+    private Switch Translation;
+    static boolean Trans=false;
+    // create a variable for our  firebase language translator.
+    FirebaseTranslator englishHindiTranslator;
 
     //Weather initialization
     String City="London";
@@ -83,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     Button WeatherBtn;
     RelativeLayout rlMain;
 
-    TextView textView;
+    public TextView textView,ShowTrans;
     FusedLocationProviderClient fusedLocationProviderClient;
     String locate;
 
@@ -102,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(messageAdapter);
         Show_Crops= findViewById(R.id.ShowCrops);
+        Translation = (Switch)findViewById(R.id.switch1);
 
         //weather initialization
         txtCity =findViewById(R.id.txtCity);
@@ -112,6 +126,35 @@ public class MainActivity extends AppCompatActivity {
         rlMain = findViewById(R.id.rlMain);
         textView=findViewById(R.id.text_viewLocation);
 
+        //translation
+
+        Translation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    Translation.setText("Hindi");
+                    Trans=true;
+                } else {
+                    // The toggle is disabled
+                    Translation.setText("English");
+                    Trans=false;
+                }
+            }
+        });
+
+        // on below line we are creating our firebase translate option.
+        FirebaseTranslatorOptions options =
+                new FirebaseTranslatorOptions.Builder()
+                        // below line we are specifying our source language.
+                        .setSourceLanguage(FirebaseTranslateLanguage.EN)
+                        // in below line we are displaying our target language.
+                        .setTargetLanguage(FirebaseTranslateLanguage.HI)
+                        // after that we are building our options.
+                        .build();
+        // below line is to get instance
+        // for firebase natural language.
+        englishHindiTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options);
+
         //Initialize fused location provider client
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -119,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //GetInformation();
                     rlMain.setVisibility(View.VISIBLE);
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -128,9 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             rlMain.setVisibility(View.GONE);
                         }
-                    }, 1000);
-
-                    GetInformation();
+                    }, 500);
                     return true;
                 }
                 return false;
@@ -150,12 +190,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //function name with the arguments which are in python file
-                PyObject obj=pyobj.callAttr("main");
-                request("Show crops of Navsari");
+                PyObject obj=pyobj.callAttr("SearchByLocation",locate.toString());
+                request("Show crops of "+locate);
                 //save op of python file in text view
-                answer="Showing crops of navsari:\n";
+                answer="Showing crops of "+locate+":\n";
                 answer+=obj.toString();
-                reply(answer);
+                if(Trans){
+                    downloadModal(answer);
+                }
+                else {
+                    reply(answer);
+                }
 
             }
         });
@@ -166,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     int result =  mTTS.setLanguage(Locale.ENGLISH);
-
+                    int resultH = mTTS.setLanguage(new Locale("hin"));
                     if (result == TextToSpeech.LANG_MISSING_DATA
                             || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "Language not Supported");
@@ -184,7 +229,12 @@ public class MainActivity extends AppCompatActivity {
                 if (i == IME_ACTION_SEND) {
                     question=InputFromKeyboard.getText().toString();
                     request(question);
-                    reply(answer);
+                    if(Trans){
+                        downloadModal(answer);
+                    }
+                    else {
+                        reply(answer);
+                    }
                     InputFromKeyboard.getText().clear();
                     //calling auto scrolling function
 
@@ -195,6 +245,49 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    //for translation
+    private void downloadModal(final String input) {
+        // below line is use to download the modal which
+        // we will require to translate in german language
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder().build();
+        Toast.makeText(MainActivity.this,"downloading",Toast.LENGTH_SHORT).show();
+        // below line is use to download our modal.
+        englishHindiTranslator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                // this method is called when modal is downloaded successfully.
+                Toast.makeText(MainActivity.this, "Please wait language modal is being downloaded.", Toast.LENGTH_SHORT).show();
+
+                // calling method to translate our entered text.
+                translateLanguage(input);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Fail to download modal", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void translateLanguage(String input) {
+        englishHindiTranslator.translate(input).addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                    reply(s);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Fail to translate", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //---------------------------------------
     //questions, analyse and answers
     public void  request(String question){
         ResponseMessage responseMessage = new ResponseMessage(question, true);
@@ -212,10 +305,12 @@ public class MainActivity extends AppCompatActivity {
         else{
             answer="Sorry! I can't help you with that!";
         }
+        //downloadModal(answer);
     }
 
 
-    public void reply(final String answer){
+    public void reply(String answer){
+
 
         ResponseMessage responseMessage2 = new ResponseMessage(answer, false);
         responseMessageList.add(responseMessage2);
@@ -275,7 +370,12 @@ public void micClick(View view) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    reply(answer);
+                    if(Trans){
+                        downloadModal(answer);
+                    }
+                    else {
+                        reply(answer);
+                    }
                 }
             }, 1000);
 
