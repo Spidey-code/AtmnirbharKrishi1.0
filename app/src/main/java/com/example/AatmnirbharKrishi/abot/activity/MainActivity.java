@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     List<ResponseMessage> responseMessageList;
     static String question,answer;
     public static TextToSpeech mTTS;
-    Button Show_Crops;
+    Button Show_Crops,WeatherBtn,Soil_info;
     //for translation
     private Switch Translation;
     static boolean Trans=false;
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     String Key ="7ba2d7afdf2bac7edc540126727c7ada";
     TextView txtCity,txtTime,txtTemp;
     ImageView imageView;
-    Button WeatherBtn;
     RelativeLayout rlMain;
 
     public TextView textView,ShowTrans;
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(messageAdapter);
         Show_Crops= findViewById(R.id.ShowCrops);
         Translation = (Switch)findViewById(R.id.switch1);
+        Soil_info=(Button)findViewById(R.id.SoilInfo);
 
         //weather initialization
         txtCity =findViewById(R.id.txtCity);
@@ -126,18 +126,49 @@ public class MainActivity extends AppCompatActivity {
         rlMain = findViewById(R.id.rlMain);
         textView=findViewById(R.id.text_viewLocation);
 
+        //Getting value from WelcomePage
+        Intent i=getIntent();
+        Boolean lang=i.getBooleanExtra("langSelected",false);
+        Translation.setChecked(lang);
+        Log.d("langvalue: ",String.valueOf(Translation.isChecked()));
+
+
+        //setting up default values
+        if(Translation.isChecked()){
+            Translation.setText("English");
+            Translation.setChecked(false);
+            Trans=false;
+            WeatherBtn.setText("Weather Info");
+            Show_Crops.setText("Show Crops");
+            Soil_info.setText("Soil Information");
+        }
+        else {
+            Translation.setText("हिंदी");
+            Translation.setChecked(true);
+            Trans=true;
+            WeatherBtn.setText("मौसम की जानकारी");
+            Show_Crops.setText("फसलें दिखाएं");
+            Soil_info.setText("मिट्टी की जानकारी");
+        }
+
         //translation
 
         Translation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
-                    Translation.setText("Hindi");
+                    Translation.setText("हिंदी");
                     Trans=true;
+                    WeatherBtn.setText("मौसम की जानकारी");
+                    Show_Crops.setText("फसलें दिखाएं");
+                    Soil_info.setText("मिट्टी की जानकारी");
                 } else {
                     // The toggle is disabled
                     Translation.setText("English");
                     Trans=false;
+                    WeatherBtn.setText("Weather Info");
+                    Show_Crops.setText("Show Crops");
+                    Soil_info.setText("Soil Information");
                 }
             }
         });
@@ -204,6 +235,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //Soil Info
+        Soil_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //function name with the arguments which are in python file
+                PyObject obj=pyobj.callAttr("SearchByCrop");
+                request("Show soil of "+locate);
+                //save op of python file in text view
+                answer="Showing soil of "+locate+":\n";
+                answer+=obj.toString();
+                if(Trans){
+                    downloadModal(answer);
+                }
+                else {
+                    reply(answer);
+                }    }
+        });
+
+
 
         //Initialization of TTS
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {

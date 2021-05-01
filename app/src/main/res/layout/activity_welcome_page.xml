@@ -5,7 +5,7 @@
     tools:context=".activity.WelcomePage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/background_image_1stpage">
 
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_marginBottom="-48dp"
         android:gravity="center"
         android:text="@string/language"
-        android:textColor="@color/teal_700"
+        android:textColor="@android:color/holo_blue_bright"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

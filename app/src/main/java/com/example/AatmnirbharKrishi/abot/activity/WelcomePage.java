@@ -147,6 +147,7 @@ public class WelcomePage extends AppCompatActivity {
     }
     public  void openPage2(){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("langSelected",lang_selected);
         startActivity(intent);
         speak("Running");
     }

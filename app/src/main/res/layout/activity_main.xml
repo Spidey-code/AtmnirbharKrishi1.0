@@ -58,23 +58,23 @@
                 android:layout_width="159dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="GetInformation"></Button>
+                android:text="Weather Info"></Button>
 
             <Switch
                 android:id="@+id/switch1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="English"
-                android:checked="false"
                 android:textOff="OFF"
                 android:textOn="ON"
                 android:textColor="@color/white" />
 
             <Button
+                android:id="@+id/SoilInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/cardview_default_elevation"
-                android:text="4"></Button>
+                android:text="Soil Information"></Button>
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -120,7 +120,7 @@
         android:layout_height="165dp"
         android:background="#0A2EF6"
         android:padding="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
