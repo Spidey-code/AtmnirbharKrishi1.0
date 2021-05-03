@@ -6,10 +6,8 @@ soil analysis which shows soil and their nutrition values this all data comes fr
 Language translation to convert all the data into desired language is done by google firebase-machine-learning translation module,<br/>
 Text to speech to reply all the data through speech for all languages is done by inbuilt modules,<br/>
 speech to text for input is done by google text recognition.<br/>
-&nbsp;
 <img src="final%20year%20project%20pics/Screenshot_2021-05-03-16-05-29-421_com.example.AatmnirbharKrishi.abot.png" width="250" height="500">
 <img src="final%20year%20project%20pics/Screenshot_2021-05-03-16-05-46-270_com.example.AatmnirbharKrishi.abot.png" width="250" height="500">
-<img src="final%20year%20project%20pics/Screenshot_2021-05-03-17-24-27-709_com.example.AatmnirbharKrishi.abot.png" width="250" height="500">
 <img src="final%20year%20project%20pics/Screenshot_2021-05-03-17-26-13-159_com.example.AatmnirbharKrishi.abot.png" width="250" height="500">
 <img src="final%20year%20project%20pics/Screenshot_2021-05-03-17-27-10-492_com.example.AatmnirbharKrishi.abot.png" width="250" height="500">
 <img src="final%20year%20project%20pics/Screenshot_2021-05-03-17-27-55-670_com.google.android.googlequicksearchbox.png" width="250" height="500">
